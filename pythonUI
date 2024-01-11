@@ -1,0 +1,831 @@
+import mysql.connector
+
+
+def insertAccount():
+    print("Create a new Account")
+    mydb = mysql.connector.connect(
+    host="localhost",
+    user="root",
+    password="Wallace415!",
+    database="rpg"
+    )
+    mycursor = mydb.cursor()
+    email=input("Enter your email address ")
+    password=input("Enter your password ")
+    username=input("Enter your username ")
+    sql = "INSERT INTO ACCOUNT (acct_name, password,email) VALUES (%s, %s,%s)"
+    val=(username,password,email)
+    mycursor.execute(sql, val)
+    mydb.commit()
+    print(mycursor.rowcount, "account information stored.")
+    mydb.close()
+    print("\n")
+
+
+def relationshipCheck():
+    print("Create a new Account")
+    mydb = mysql.connector.connect(
+    host="localhost",
+    user="root",
+    password="Wallace415!",
+    database="rpg"
+    )
+    mycursor = mydb.cursor()
+    sql = "SELECT RELATIONSHIP.enemy, RELATIONSHIP.supplier, RELATIONSHIP.friend,NPC.name FROM RELATIONSHIP, NPC where RELATIONSHIP.npcid = NPC.id;"
+    mycursor.execute(sql)
+    info=mycursor.fetchall()
+    for rows in info:
+        if rows[0]==1:
+            print(rows[3],": enemy")
+        elif rows[1]==1:
+            print(rows[3],": supplier")
+        else:
+            print(rows[3],": friend")    
+    mydb.close()
+    print("\n")
+   
+def itemCheck():
+    mydb = mysql.connector.connect(
+    host="localhost",
+    user="root",
+    password="Wallace415!",
+    database="rpg"
+    )
+    mycursor = mydb.cursor()
+    locationName=input("Enter a location name ")
+    sql="SELECT DISTINCT ITEM.i_name FROM ITEM, LOCATION where ITEM.locationname = \""+locationName+"\";"
+    mycursor.execute(sql)
+   
+    info=mycursor.fetchall()
+    if len(info)==0:
+         print("No items at",locationName)
+    else:
+        print("Items in",locationName)
+        for rows in info:
+            print("Item Name: ", rows[0])
+
+
+    mydb.close()
+    print("\n")
+
+
+def accountCheck():
+    mydb = mysql.connector.connect(
+    host="localhost",
+    user="root",
+    password="Wallace415!",
+    database="rpg"
+    )
+    mycursor = mydb.cursor()
+    sql = "SELECT PCHAR.p_a_name, charname FROM PCHAR, ACCOUNT where PCHAR.p_a_name = ACCOUNT.acct_name;"
+    mycursor.execute(sql)
+    info=mycursor.fetchall()
+    for row in info:
+            print("Account name: ", row[0])
+            print("Character name: ",row[1])
+    mydb.close()
+    print("\n")
+
+
+def ItemDmgCheck():
+    mydb = mysql.connector.connect(
+    host="localhost",
+    user="root",
+    password="Wallace415!",
+    database="rpg"
+    )
+    mycursor = mydb.cursor()
+    sql="SELECT ITEM.i_name, ITEM.i_damage from ITEM GROUP BY (ITEM.i_name);"
+    mycursor.execute(sql)
+    info=mycursor.fetchall()
+    for row in info:
+            print("Item name: ", row[0])
+            print("Item damage: ",row[1])
+    mydb.close()
+    print("\n")
+
+
+def plantCheck():
+    mydb = mysql.connector.connect(
+    host="localhost",
+    user="root",
+    password="Wallace415!",
+    database="rpg"
+    )
+    mycursor = mydb.cursor()
+    sql="SELECT LOCATION.lname, LOCATION.plants FROM LOCATION GROUP BY (LOCATION.lname);"
+    mycursor.execute(sql)
+    info=mycursor.fetchall()
+    for row in info:
+            print("Location Name: ", row[0])
+            print("Plant Names: ", row[1])
+    mydb.close()
+    print("\n")
+
+
+def levelCheck():
+    mydb = mysql.connector.connect(
+    host="localhost",
+    user="root",
+    password="Wallace415!",
+    database="rpg"
+    )
+    mycursor = mydb.cursor()
+    levelReq=input("Enter a number: ")
+    if(levelReq.isdigit()):
+        sql="SELECT PCHAR.charname FROM PCHAR where PCHAR.level > "+levelReq+";"
+        mycursor.execute(sql)
+        info=mycursor.fetchall()
+        if len(info)==0:
+            print("No characters are above "+levelReq)
+        else:
+            print("Characters over level "+levelReq)
+            for row in info:
+                print("Character Name: ", row[0])
+        mydb.close()
+        print("\n")
+    else:
+        print("Invalid Input")
+        levelCheck()
+        mydb.close()
+
+
+def letterEmailCheck():
+    mydb = mysql.connector.connect(
+    host="localhost",
+    user="root",
+    password="Wallace415!",
+    database="rpg"
+    )
+    letterCheck=input("Input character to find in emails: ")
+    mycursor = mydb.cursor()
+    sql="SELECT ACCOUNT.acct_name FROM ACCOUNT where ACCOUNT.email LIKE \"%"+letterCheck+"%\";"
+    mycursor.execute(sql)
+    info=mycursor.fetchall()
+    if len(info)==0:
+        print("No email address contain "+letterCheck)
+    else:
+        print("Accounts whos email contain "+letterCheck)
+        for row in info:
+            print(row[0])
+    mydb.close()
+    print("\n")            
+
+
+def npcAttackPointCheck():
+    mydb = mysql.connector.connect(
+    host="localhost",
+    user="root",
+    password="Wallace415!",
+    database="rpg"
+    )
+    mycursor = mydb.cursor()
+    sql = "SELECT NPC.name, NPC.attack_pnts FROM NPC;"
+    mycursor.execute(sql)
+    info=mycursor.fetchall()
+    for rows in info:
+         print(rows[0]," has ",rows[1]," attack points")
+    mydb.close()
+    print("\n")
+
+
+def averageExpCheck():
+    mydb = mysql.connector.connect(
+    host="localhost",
+    user="root",
+    password="Wallace415!",
+    database="rpg"
+    )
+    mycursor = mydb.cursor()
+    sql = "SELECT AVG(PCHAR.EXP) FROM PCHAR;"
+    mycursor.execute(sql)
+    info=mycursor.fetchall()
+    print("Average Character EXP")
+    for row in info:
+        print(row[0])
+    mydb.close()
+    print("\n")
+
+
+def totalMaxDmgCheck():
+    mydb = mysql.connector.connect(
+    host="localhost",
+    user="root",
+    password="Wallace415!",
+    database="rpg"
+    )
+    mycursor = mydb.cursor()
+    sql = "SELECT SUM(PCHAR.MAXDAMAGE) from PCHAR;"
+    mycursor.execute(sql)
+    info=mycursor.fetchall()
+    print("Sum of Max Damage")
+    for row in info:
+        print(row[0])
+    mydb.close()
+    print("\n")
+
+
+
+
+def menu():
+    menuChoice=-1
+    while menuChoice!="12":
+        print("Option 1: Insert Account")
+        print("Option 2: Relationship Check")
+        print("Option 3: Item Check")
+        print("Option 4: Item Damage Check")
+        print("Option 5: Account Check")
+        print("Option 6: Plant Check")
+        print("Option 7: Level Check")
+        print("Option 8: Email Check")
+        print("Option 9: NPC Attack Point Check")
+        print("Option 10: Average Experience Check")
+        print("Option 11: Total Max Damage Check")
+        print("Option 12: Quit Program")
+        menuChoice=input("Select your Option ")
+        if menuChoice == "1":
+            insertAccount()
+        elif menuChoice=="2":
+            relationshipCheck()
+        elif menuChoice=="3":
+            itemCheck()
+        elif menuChoice=="4":
+            ItemDmgCheck()
+        elif menuChoice=="5":
+            accountCheck()
+        elif menuChoice=="6":
+            plantCheck()
+        elif menuChoice=="7":
+            levelCheck()
+        elif menuChoice=="8":
+            letterEmailCheck()
+        elif menuChoice=="9":
+            npcAttackPointCheck()
+        elif menuChoice=="10":
+            averageExpCheck()
+        elif menuChoice=="11":
+            totalMaxDmgCheck()
+        elif menuChoice=="12":
+            break
+        else:
+            print("Invalid selection")
+            print("\n")
+    print("Thank you!")
+   
+
+
+menu()
+import mysql.connector
+
+
+def insertAccount():
+    print("Create a new Account")
+    mydb = mysql.connector.connect(
+    host="localhost",
+    user="root",
+    password="Wallace415!",
+    database="rpg"
+    )
+    mycursor = mydb.cursor()
+    email=input("Enter your email address ")
+    password=input("Enter your password ")
+    username=input("Enter your username ")
+    sql = "INSERT INTO ACCOUNT (acct_name, password,email) VALUES (%s, %s,%s)"
+    val=(username,password,email)
+    mycursor.execute(sql, val)
+    mydb.commit()
+    print(mycursor.rowcount, "account information stored.")
+    mydb.close()
+    print("\n")
+
+
+def relationshipCheck():
+    print("Create a new Account")
+    mydb = mysql.connector.connect(
+    host="localhost",
+    user="root",
+    password="Wallace415!",
+    database="rpg"
+    )
+    mycursor = mydb.cursor()
+    sql = "SELECT RELATIONSHIP.enemy, RELATIONSHIP.supplier, RELATIONSHIP.friend,NPC.name FROM RELATIONSHIP, NPC where RELATIONSHIP.npcid = NPC.id;"
+    mycursor.execute(sql)
+    info=mycursor.fetchall()
+    for rows in info:
+        if rows[0]==1:
+            print(rows[3],": enemy")
+        elif rows[1]==1:
+            print(rows[3],": supplier")
+        else:
+            print(rows[3],": friend")    
+    mydb.close()
+    print("\n")
+   
+def itemCheck():
+    mydb = mysql.connector.connect(
+    host="localhost",
+    user="root",
+    password="Wallace415!",
+    database="rpg"
+    )
+    mycursor = mydb.cursor()
+    locationName=input("Enter a location name ")
+    sql="SELECT DISTINCT ITEM.i_name FROM ITEM, LOCATION where ITEM.locationname = \""+locationName+"\";"
+    mycursor.execute(sql)
+   
+    info=mycursor.fetchall()
+    if len(info)==0:
+         print("No items at",locationName)
+    else:
+        print("Items in",locationName)
+        for rows in info:
+            print("Item Name: ", rows[0])
+
+
+    mydb.close()
+    print("\n")
+
+
+def accountCheck():
+    mydb = mysql.connector.connect(
+    host="localhost",
+    user="root",
+    password="Wallace415!",
+    database="rpg"
+    )
+    mycursor = mydb.cursor()
+    sql = "SELECT PCHAR.p_a_name, charname FROM PCHAR, ACCOUNT where PCHAR.p_a_name = ACCOUNT.acct_name;"
+    mycursor.execute(sql)
+    info=mycursor.fetchall()
+    for row in info:
+            print("Account name: ", row[0])
+            print("Character name: ",row[1])
+    mydb.close()
+    print("\n")
+
+
+def ItemDmgCheck():
+    mydb = mysql.connector.connect(
+    host="localhost",
+    user="root",
+    password="Wallace415!",
+    database="rpg"
+    )
+    mycursor = mydb.cursor()
+    sql="SELECT ITEM.i_name, ITEM.i_damage from ITEM GROUP BY (ITEM.i_name);"
+    mycursor.execute(sql)
+    info=mycursor.fetchall()
+    for row in info:
+            print("Item name: ", row[0])
+            print("Item damage: ",row[1])
+    mydb.close()
+    print("\n")
+
+
+def plantCheck():
+    mydb = mysql.connector.connect(
+    host="localhost",
+    user="root",
+    password="Wallace415!",
+    database="rpg"
+    )
+    mycursor = mydb.cursor()
+    sql="SELECT LOCATION.lname, LOCATION.plants FROM LOCATION GROUP BY (LOCATION.lname);"
+    mycursor.execute(sql)
+    info=mycursor.fetchall()
+    for row in info:
+            print("Location Name: ", row[0])
+            print("Plant Names: ", row[1])
+    mydb.close()
+    print("\n")
+
+
+def levelCheck():
+    mydb = mysql.connector.connect(
+    host="localhost",
+    user="root",
+    password="Wallace415!",
+    database="rpg"
+    )
+    mycursor = mydb.cursor()
+    levelReq=input("Enter a number: ")
+    if(levelReq.isdigit()):
+        sql="SELECT PCHAR.charname FROM PCHAR where PCHAR.level > "+levelReq+";"
+        mycursor.execute(sql)
+        info=mycursor.fetchall()
+        if len(info)==0:
+            print("No characters are above "+levelReq)
+        else:
+            print("Characters over level "+levelReq)
+            for row in info:
+                print("Character Name: ", row[0])
+        mydb.close()
+        print("\n")
+    else:
+        print("Invalid Input")
+        levelCheck()
+        mydb.close()
+
+
+def letterEmailCheck():
+    mydb = mysql.connector.connect(
+    host="localhost",
+    user="root",
+    password="Wallace415!",
+    database="rpg"
+    )
+    letterCheck=input("Input character to find in emails: ")
+    mycursor = mydb.cursor()
+    sql="SELECT ACCOUNT.acct_name FROM ACCOUNT where ACCOUNT.email LIKE \"%"+letterCheck+"%\";"
+    mycursor.execute(sql)
+    info=mycursor.fetchall()
+    if len(info)==0:
+        print("No email address contain "+letterCheck)
+    else:
+        print("Accounts whos email contain "+letterCheck)
+        for row in info:
+            print(row[0])
+    mydb.close()
+    print("\n")            
+
+
+def npcAttackPointCheck():
+    mydb = mysql.connector.connect(
+    host="localhost",
+    user="root",
+    password="Wallace415!",
+    database="rpg"
+    )
+    mycursor = mydb.cursor()
+    sql = "SELECT NPC.name, NPC.attack_pnts FROM NPC;"
+    mycursor.execute(sql)
+    info=mycursor.fetchall()
+    for rows in info:
+         print(rows[0]," has ",rows[1]," attack points")
+    mydb.close()
+    print("\n")
+
+
+def averageExpCheck():
+    mydb = mysql.connector.connect(
+    host="localhost",
+    user="root",
+    password="Wallace415!",
+    database="rpg"
+    )
+    mycursor = mydb.cursor()
+    sql = "SELECT AVG(PCHAR.EXP) FROM PCHAR;"
+    mycursor.execute(sql)
+    info=mycursor.fetchall()
+    print("Average Character EXP")
+    for row in info:
+        print(row[0])
+    mydb.close()
+    print("\n")
+
+
+def totalMaxDmgCheck():
+    mydb = mysql.connector.connect(
+    host="localhost",
+    user="root",
+    password="Wallace415!",
+    database="rpg"
+    )
+    mycursor = mydb.cursor()
+    sql = "SELECT SUM(PCHAR.MAXDAMAGE) from PCHAR;"
+    mycursor.execute(sql)
+    info=mycursor.fetchall()
+    print("Sum of Max Damage")
+    for row in info:
+        print(row[0])
+    mydb.close()
+    print("\n")
+
+
+
+
+def menu():
+    menuChoice=-1
+    while menuChoice!="12":
+        print("Option 1: Insert Account")
+        print("Option 2: Relationship Check")
+        print("Option 3: Item Check")
+        print("Option 4: Item Damage Check")
+        print("Option 5: Account Check")
+        print("Option 6: Plant Check")
+        print("Option 7: Level Check")
+        print("Option 8: Email Check")
+        print("Option 9: NPC Attack Point Check")
+        print("Option 10: Average Experience Check")
+        print("Option 11: Total Max Damage Check")
+        print("Option 12: Quit Program")
+        menuChoice=input("Select your Option ")
+        if menuChoice == "1":
+            insertAccount()
+        elif menuChoice=="2":
+            relationshipCheck()
+        elif menuChoice=="3":
+            itemCheck()
+        elif menuChoice=="4":
+            ItemDmgCheck()
+        elif menuChoice=="5":
+            accountCheck()
+        elif menuChoice=="6":
+            plantCheck()
+        elif menuChoice=="7":
+            levelCheck()
+        elif menuChoice=="8":
+            letterEmailCheck()
+        elif menuChoice=="9":
+            npcAttackPointCheck()
+        elif menuChoice=="10":
+            averageExpCheck()
+        elif menuChoice=="11":
+            totalMaxDmgCheck()
+        elif menuChoice=="12":
+            break
+        else:
+            print("Invalid selection")
+            print("\n")
+    print("Thank you!")
+   
+
+
+menu()
+import mysql.connector
+
+
+def insertAccount():
+    print("Create a new Account")
+    mydb = mysql.connector.connect(
+    host="localhost",
+    user="root",
+    password="Wallace415!",
+    database="rpg"
+    )
+    mycursor = mydb.cursor()
+    email=input("Enter your email address ")
+    password=input("Enter your password ")
+    username=input("Enter your username ")
+    sql = "INSERT INTO ACCOUNT (acct_name, password,email) VALUES (%s, %s,%s)"
+    val=(username,password,email)
+    mycursor.execute(sql, val)
+    mydb.commit()
+    print(mycursor.rowcount, "account information stored.")
+    mydb.close()
+    print("\n")
+
+
+def relationshipCheck():
+    print("Create a new Account")
+    mydb = mysql.connector.connect(
+    host="localhost",
+    user="root",
+    password="Wallace415!",
+    database="rpg"
+    )
+    mycursor = mydb.cursor()
+    sql = "SELECT RELATIONSHIP.enemy, RELATIONSHIP.supplier, RELATIONSHIP.friend,NPC.name FROM RELATIONSHIP, NPC where RELATIONSHIP.npcid = NPC.id;"
+    mycursor.execute(sql)
+    info=mycursor.fetchall()
+    for rows in info:
+        if rows[0]==1:
+            print(rows[3],": enemy")
+        elif rows[1]==1:
+            print(rows[3],": supplier")
+        else:
+            print(rows[3],": friend")    
+    mydb.close()
+    print("\n")
+   
+def itemCheck():
+    mydb = mysql.connector.connect(
+    host="localhost",
+    user="root",
+    password="Wallace415!",
+    database="rpg"
+    )
+    mycursor = mydb.cursor()
+    locationName=input("Enter a location name ")
+    sql="SELECT DISTINCT ITEM.i_name FROM ITEM, LOCATION where ITEM.locationname = \""+locationName+"\";"
+    mycursor.execute(sql)
+   
+    info=mycursor.fetchall()
+    if len(info)==0:
+         print("No items at",locationName)
+    else:
+        print("Items in",locationName)
+        for rows in info:
+            print("Item Name: ", rows[0])
+
+
+    mydb.close()
+    print("\n")
+
+
+def accountCheck():
+    mydb = mysql.connector.connect(
+    host="localhost",
+    user="root",
+    password="Wallace415!",
+    database="rpg"
+    )
+    mycursor = mydb.cursor()
+    sql = "SELECT PCHAR.p_a_name, charname FROM PCHAR, ACCOUNT where PCHAR.p_a_name = ACCOUNT.acct_name;"
+    mycursor.execute(sql)
+    info=mycursor.fetchall()
+    for row in info:
+            print("Account name: ", row[0])
+            print("Character name: ",row[1])
+    mydb.close()
+    print("\n")
+
+
+def ItemDmgCheck():
+    mydb = mysql.connector.connect(
+    host="localhost",
+    user="root",
+    password="Wallace415!",
+    database="rpg"
+    )
+    mycursor = mydb.cursor()
+    sql="SELECT ITEM.i_name, ITEM.i_damage from ITEM GROUP BY (ITEM.i_name);"
+    mycursor.execute(sql)
+    info=mycursor.fetchall()
+    for row in info:
+            print("Item name: ", row[0])
+            print("Item damage: ",row[1])
+    mydb.close()
+    print("\n")
+
+
+def plantCheck():
+    mydb = mysql.connector.connect(
+    host="localhost",
+    user="root",
+    password="Wallace415!",
+    database="rpg"
+    )
+    mycursor = mydb.cursor()
+    sql="SELECT LOCATION.lname, LOCATION.plants FROM LOCATION GROUP BY (LOCATION.lname);"
+    mycursor.execute(sql)
+    info=mycursor.fetchall()
+    for row in info:
+            print("Location Name: ", row[0])
+            print("Plant Names: ", row[1])
+    mydb.close()
+    print("\n")
+
+
+def levelCheck():
+    mydb = mysql.connector.connect(
+    host="localhost",
+    user="root",
+    password="Wallace415!",
+    database="rpg"
+    )
+    mycursor = mydb.cursor()
+    levelReq=input("Enter a number: ")
+    if(levelReq.isdigit()):
+        sql="SELECT PCHAR.charname FROM PCHAR where PCHAR.level > "+levelReq+";"
+        mycursor.execute(sql)
+        info=mycursor.fetchall()
+        if len(info)==0:
+            print("No characters are above "+levelReq)
+        else:
+            print("Characters over level "+levelReq)
+            for row in info:
+                print("Character Name: ", row[0])
+        mydb.close()
+        print("\n")
+    else:
+        print("Invalid Input")
+        levelCheck()
+        mydb.close()
+
+
+def letterEmailCheck():
+    mydb = mysql.connector.connect(
+    host="localhost",
+    user="root",
+    password="Wallace415!",
+    database="rpg"
+    )
+    letterCheck=input("Input character to find in emails: ")
+    mycursor = mydb.cursor()
+    sql="SELECT ACCOUNT.acct_name FROM ACCOUNT where ACCOUNT.email LIKE \"%"+letterCheck+"%\";"
+    mycursor.execute(sql)
+    info=mycursor.fetchall()
+    if len(info)==0:
+        print("No email address contain "+letterCheck)
+    else:
+        print("Accounts whos email contain "+letterCheck)
+        for row in info:
+            print(row[0])
+    mydb.close()
+    print("\n")            
+
+
+def npcAttackPointCheck():
+    mydb = mysql.connector.connect(
+    host="localhost",
+    user="root",
+    password="Wallace415!",
+    database="rpg"
+    )
+    mycursor = mydb.cursor()
+    sql = "SELECT NPC.name, NPC.attack_pnts FROM NPC;"
+    mycursor.execute(sql)
+    info=mycursor.fetchall()
+    for rows in info:
+         print(rows[0]," has ",rows[1]," attack points")
+    mydb.close()
+    print("\n")
+
+
+def averageExpCheck():
+    mydb = mysql.connector.connect(
+    host="localhost",
+    user="root",
+    password="Wallace415!",
+    database="rpg"
+    )
+    mycursor = mydb.cursor()
+    sql = "SELECT AVG(PCHAR.EXP) FROM PCHAR;"
+    mycursor.execute(sql)
+    info=mycursor.fetchall()
+    print("Average Character EXP")
+    for row in info:
+        print(row[0])
+    mydb.close()
+    print("\n")
+
+
+def totalMaxDmgCheck():
+    mydb = mysql.connector.connect(
+    host="localhost",
+    user="root",
+    password="Wallace415!",
+    database="rpg"
+    )
+    mycursor = mydb.cursor()
+    sql = "SELECT SUM(PCHAR.MAXDAMAGE) from PCHAR;"
+    mycursor.execute(sql)
+    info=mycursor.fetchall()
+    print("Sum of Max Damage")
+    for row in info:
+        print(row[0])
+    mydb.close()
+    print("\n")
+
+
+
+
+def menu():
+    menuChoice=-1
+    while menuChoice!="12":
+        print("Option 1: Insert Account")
+        print("Option 2: Relationship Check")
+        print("Option 3: Item Check")
+        print("Option 4: Item Damage Check")
+        print("Option 5: Account Check")
+        print("Option 6: Plant Check")
+        print("Option 7: Level Check")
+        print("Option 8: Email Check")
+        print("Option 9: NPC Attack Point Check")
+        print("Option 10: Average Experience Check")
+        print("Option 11: Total Max Damage Check")
+        print("Option 12: Quit Program")
+        menuChoice=input("Select your Option ")
+        if menuChoice == "1":
+            insertAccount()
+        elif menuChoice=="2":
+            relationshipCheck()
+        elif menuChoice=="3":
+            itemCheck()
+        elif menuChoice=="4":
+            ItemDmgCheck()
+        elif menuChoice=="5":
+            accountCheck()
+        elif menuChoice=="6":
+            plantCheck()
+        elif menuChoice=="7":
+            levelCheck()
+        elif menuChoice=="8":
+            letterEmailCheck()
+        elif menuChoice=="9":
+            npcAttackPointCheck()
+        elif menuChoice=="10":
+            averageExpCheck()
+        elif menuChoice=="11":
+            totalMaxDmgCheck()
+        elif menuChoice=="12":
+            break
+        else:
+            print("Invalid selection")
+            print("\n")
+    print("Thank you!")
+   
+
+
+menu()
