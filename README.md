@@ -1,10 +1,10 @@
 # DBMS-Project
 # Google Doc Version: https://docs.google.com/document/d/1TG00R3ZInnQFA39LqRclsuUaBFJcjHqL48-ROokQV9Q/edit?usp=sharing
-
-Goal: Make a RPG database with Account, Player Character, Location, NPC, & Item entities. 
-Slide Presentation: https://docs.google.com/presentation/d/1YjIciIclYQxZ-mWiltSH8ZOLUdgvcUnecAs3v5vB5Tg/edit?usp=sharing
+# Slide Presentation: https://docs.google.com/presentation/d/1YjIciIclYQxZ-mWiltSH8ZOLUdgvcUnecAs3v5vB5Tg/edit?usp=sharing
 
 # Implemented Search Queries
+Goal: Make a RPG database with Account, Player Character, Location, NPC, & Item entities. 
+
 How much damage all items do - SELECT DISTINCT ITEM.i_damage from ITEM GROUP BY (ITEM.i_name); in doc
 
 Search relationship to a NPC - SELECT RELATIONSHIP.enemy, RELATIONSHIP.supplier, RELATIONSHIP.enemy FROM RELATIONSHIP, NPC where RELATIONSHIP.npcid = NPC.id GROUP BY (NPC.name); in doc
